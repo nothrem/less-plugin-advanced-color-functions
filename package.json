@@ -1,6 +1,6 @@
 {
     "name": "less-plugin-version",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "description": "less plugin for file versioning",
     "homepage": "http://lesscss.org",
     "author": {
