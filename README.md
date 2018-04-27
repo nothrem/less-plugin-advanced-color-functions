@@ -31,6 +31,17 @@ less: {
     files: ...
 ```
 
+## Options
+
+### root
+
+_default: current folder "`.`"_
+  
+Looks for files in given folder.
+
+For example when `www` is the root folder, in the example below it will look for file `./www/img/logo.jpg`. 
+    
+
 ## Browser usage
 
 Browser usage is not supported at this time.
