@@ -24,9 +24,6 @@
 		"less": ">2.1.0",
 		"diff": "^1.0"
 	},
-	"scripts": {
-		"test": "node test"
-	},
     "engines": {
         "node": ">=0.4.2"
     },

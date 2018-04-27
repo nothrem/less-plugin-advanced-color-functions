@@ -1,32 +1,34 @@
-less-plugin-advanced-color-functions
+less-plugin-version
 ====================================
 
-Adds some advanced colour functions that helps in finding more contrasting colors: 
+Adds function that calculates version hash for files. 
 
- - invertluma: inverts the luma of a color giving a version darken or lighter than the original
- - contrastmore: if color1 and color2 have a similar luma, it contrast color2 a little bit more. If the color2 luma resultant is greater than 1, or less than 0, its luma is pivoted around color1 luma.
- - autocontrast: if color1 and color2 have a similar luma, it contrast color2 a little bit more. 
-If the color2 luma resultant is greater than 1, or less than 0, its luma gets inverted.
-
-## lessc usage
+ ## Instalation
 
 ```
-npm install -g less-plugin-advanced-color-functions
-```
-
-and then on the command line,
-
-```
-lessc file.less --advanced-color-functions
+npm install -g nothrem/less-plugin-version
 ```
 
 ## Programmatic usage
 
 ```
-var LessPluginAdvancedColorFunctions = require('less-plugin-advanced-color-functions'),
-    AdvancedColorFunctions = new LessPluginAdvancedColorFunctions();
-less.render(lessString, { plugins: [AdvancedColorFunctions] })
+var LessPluginVersion = require('less-plugin-version');
+less.render(lessString, { plugins: [new LessPluginVersion({root: 'www'})] })
   .then(
+```
+
+## Grunt configuration
+
+```
+less: {
+    options: {
+        plugins:           [
+            new (require('less-plugin-version'))({
+                root: 'www'
+            })
+        ]
+    },
+    files: ...
 ```
 
 ## Browser usage
@@ -36,28 +38,23 @@ Browser usage is not supported at this time.
 ## Example
 
 ```css
-@color1: #ff0000;
-@color2: #ee0000;
-
-.colors {
-invertluma: invertluma(@color1);
-contrastmore: contrastmore(@color1,@color2);
-autocontrast: autocontrast(@color1,@color2);
-autocontrast50: autocontrast(@color1,@color2,50%);
-}
+.logo { background-image: versioned('/img/logo.jpg'); }
+.logo-broken { background-image: versioned('/img/logo-missing.jpg'); }
 ```
 
 outputs:
 
 ```css
-.colors {
-  invertluma: #ff0000;
-  contrastmore: #650000;
-  autocontrast: #ff7878;
-  autocontrast50: #ffdede;
-}
+.logo { background-image: url(/img/logo.jpg?1a2b3c4d); }
+.logo-broken { background-image: url(/img/logo-missing.jpg?00000000); }
 ```
 
-The compiled coloures will look like that shown below:
-![contrasting colours used in buttons](http://imgur.com/CqwTiO9.png?1)
+_In case of an internal error outputs:_
+```css
+.logo-broken { background-image: url(/img/logo-missing.jpg?error=<error description>); }
+```
 
+_... and also prints into error console:_
+```
+Failed to process function versioned('/img/logo-missing.jpg') with error "<error description>" in file less/test.less
+```
