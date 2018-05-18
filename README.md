@@ -31,6 +31,11 @@ less: {
     files: ...
 ```
 
+## Browser usage
+
+Browser usage is not supported at this time.
+
+
 ## Options
 
 ### root
@@ -72,9 +77,31 @@ For a grunt task use:
 ``` 
 Then it will output the information when you run `grunt less --verbose`.
 
-## Browser usage
+### from
 
-Browser usage is not supported at this time.
+_default: undefined_
+  
+By default the version hash is generated from file's modification time which is OK when the LESS files are
+compiled on production server from files that won't be edited anymore.
+
+However if the files are compiled on a developer machine before they are committed into a repository, their
+modification time may change each time someone does a checkout or an update from the repository. In such cache
+it is better to generate the version hash from file's content to make sure it changed only when the file
+really changed. Generating version hash from file's content is slower but it should not matter when it's
+done before a commit and not on-the-fly on a server.
+
+```
+    from: 'content'
+```
+
+This way you don't need to recompile the LESS files each time you update your repository. 
+
+However note that if a file (image) is included both from CSS (whose version hash is generated from content by 
+this plugin) and HTML (whose version hash is generated from modification time on-the-fly by the server)
+the file will have different version hashes in CSS and HTML and will be downloaded twice by the client.
+*If this is a problem, either include the file as a background image from the CSS or define the CSS
+as inline style in your HTML. For best solution, modify your server version hash generator to generate hash from
+file's content and then cache it until the file's modification time changes.* 
 
 ## Example
 
@@ -100,7 +127,15 @@ _... and also prints into error console:_
 Failed to process function versioned('/img/logo-missing.jpg') with error "<error description>" in file less/test.less
 ```
 
-# Note for Windows users
+## Cache
+
+The plugin uses cache for already generated version hashes so that it does not have to generate it again
+when the file is referenced from several LESS files. This is especially useful when the option `from: 'content'`
+is used. To see how the cache is used you can use the `verbose: true` option.
+
+This cache is not saved to the disk and is valid only for one run of the less compiler or grunt task.   
+
+## Note for Windows users
 The plugin may internally convert backslashes in paths into slashes. Windows should support both
  backward and forward slashes in paths and also should look for the folder root (`/`) on the system disk (`c:\`). 
  To support all systems you should configure the plugin using the forward slashes.
