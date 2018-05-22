@@ -38,6 +38,19 @@ Browser usage is not supported at this time.
 
 ## Options
 
+Options can be passed into *constructor* or changed later by method `setOptions()`.
+The *constructor* copies all values into new option object and method `setOptions()` then merges
+new values into the existing ones.
+
+```javascript
+var LessPluginVersion = require('less-plugin-version', { optionA: true, optionB: false});
+
+LessPluginVersion.setOptions({optionC: true}); //add new option, keep existing ones
+
+LessPluginVersion.setOptions({optionB: true}); //change option, keep others
+``` 
+
+
 ### root
 
 _default: current folder "`.`"_
@@ -72,7 +85,7 @@ and the folder where is looks for the file. Then it will output the calculated h
 Note that if the file does not exist or the path does not reference a file, the plugin will **always** output a warning.
 
 For a grunt task use: 
-```
+```javascript
    verbose: grunt.option('verbose')
 ``` 
 Then it will output the information when you run `grunt less --verbose`.
@@ -90,7 +103,7 @@ it is better to generate the version hash from file's content to make sure it ch
 really changed. Generating version hash from file's content is slower but it should not matter when it's
 done before a commit and not on-the-fly on a server.
 
-```
+```javascript
     from: 'content'
 ```
 
@@ -105,7 +118,7 @@ file's content and then cache it until the file's modification time changes.*
 
 ## Example
 
-```css
+```less
 .logo { background-image: versioned('/img/logo.jpg'); }
 .logo-broken { background-image: versioned('/img/logo-missing.jpg'); }
 ```
@@ -123,7 +136,7 @@ _In case of an internal error outputs:_
 ```
 
 _... and also prints into error console:_
-```
+```bash
 Failed to process function versioned('/img/logo-missing.jpg') with error "<error description>" in file less/test.less
 ```
 
