@@ -114,7 +114,25 @@ this plugin) and HTML (whose version hash is generated from modification time on
 the file will have different version hashes in CSS and HTML and will be downloaded twice by the client.
 *If this is a problem, either include the file as a background image from the CSS or define the CSS
 as inline style in your HTML. For best solution, modify your server version hash generator to generate hash from
-file's content and then cache it until the file's modification time changes.* 
+file's content and then cache it until the file's modification time changes.*
+
+Note: version 1.2.x tried to load the file as UTF-8 text file which is not binary-safe and the generated hash may
+not be compatible with other CRC32 calculators. Since 1.3.0 the plugin uses binary-safe access and reads the file as 8-bit 
+data stream which is compatible with other methods for CRC32 file hash calculation (e.g. Simple File Verification *.sfv).
+
+In case the time is not reliable and content is too large to generate the hash you can use file size as an alternative method.  
+
+```javascript
+    from: 'size'
+```
+
+This method takes size of the file in bytes and generates hash from this number. This method should be compatible with
+ all Windows and Unix-like systems and generate same results. 
+
+Size may not be reliable for text files or Bitmap images, however JPG and PNG images used in CSS use content-based compression which
+ means two images (even with the same dimensions) will rarely have exactly the same size in bytes. 
+ _However the smaller the images are the higher is the change that two images will have same size in bytes. For example 1×1px PNG will always 
+ have the same size regardless of the color of the pixel which means changing such image will not change the hash._    
 
 ## Example
 
